@@ -224,7 +224,12 @@ class Script(scripts.Script):
 
                 model_path = lora_models.get(model, None)
                 if model_path is None:
-                    raise RuntimeError(f"model not found: {model}")
+                    for key, value in lora_models.items():
+                        if key.startswith(f"{model}("):
+                            model_path = value
+                            continue
+                    if model_path is None:
+                        raise RuntimeError(f"model not found: {model}")
 
                 if model_path.startswith('"') and model_path.endswith('"'):  # trim '"' at start/end
                     model_path = model_path[1:-1]
